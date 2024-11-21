@@ -27,14 +27,36 @@ class Program
     }
 
 
-    //public static object _lock = new object();
+    public static object _lock = new object();
 
     public static void Addition()
     {
         for (int i = 0; i < 50000; i++)
         {
+            bool lockTaken = false;
+            Monitor.Enter(_lock, ref lockTaken);
+            try
+            {
+                sum++;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                if (lockTaken)
+                {
+                    Monitor.Exit(_lock);
+                }
+
+            }
+
+
+
+
             // sum++;
-             Interlocked.Increment(ref sum); // for perfomance this is better 
+            // Interlocked.Increment(ref sum); // for perfomance this is better 
 
             //lock (_lock)
             //{
