@@ -1,47 +1,50 @@
-﻿using System;
-using System.Threading;
+﻿using System.Diagnostics;
 
-namespace MultiThreadingInCSharp
+namespace MultiThreadingInCSharp;
+class Program
 {
-    class Program
+    public static int sum = 0;
+
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        Stopwatch _watch = Stopwatch.StartNew();
+        Thread t1 = new Thread(Addition);
+        Thread t2 = new Thread(Addition);
+        Thread t3 = new Thread(Addition);
+
+        t1.Start();
+        t2.Start();
+        t3.Start();
+
+        t1.Join();
+        t2.Join();
+        t3.Join();
+
+        Console.WriteLine("Total Sum is " + sum);
+        _watch.Stop();
+        Console.WriteLine("Time taken is " + _watch.ElapsedTicks);
+        Console.ReadLine();
+    }
+
+
+    //public static object _lock = new object();
+
+    public static void Addition()
+    {
+        for (int i = 0; i < 50000; i++)
         {
-            Console.WriteLine("Main method execution started");
+            // sum++;
+             Interlocked.Increment(ref sum); // for perfomance this is better 
 
-            Thread t1 = new Thread(Program.Method1);
-            t1.Start();
-            Thread t2 = new Thread(Program.Method2);
-            t2.Start();
+            //lock (_lock)
+            //{
+            //    sum++;
+            //}
 
-            if(t1.Join(2000))
-            {
-                Console.WriteLine("Method 1 execution Completed");
-            }
-            
-            t2.Join();
-            Console.WriteLine("Method 2 execution Completed");
-
-            Console.WriteLine(t1.IsAlive
-                ? "Method 1 execution is still going on "
-                : "Method 1 execution is Completed ");
-
-            Console.WriteLine("Main method execution completed");
-            Console.ReadLine();
-        }
-
-        static void Method1()
-        {
-            Console.WriteLine("Method1 execution started");
-            Thread.Sleep(5000);
-            Console.WriteLine("method 1 is awake");
-        }
-
-        static void Method2()
-        {
-            Console.WriteLine("Method2 execution started");
         }
     }
 
 
 }
+
+
