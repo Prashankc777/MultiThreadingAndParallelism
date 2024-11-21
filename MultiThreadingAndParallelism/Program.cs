@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.WebSockets;
 using System.Threading;
 
 namespace MultiThreadingInCSharp
@@ -8,50 +7,70 @@ namespace MultiThreadingInCSharp
     {
         static void Main(string[] args)
         {
-            // Console.WriteLine("Hello World!");
-            Thread t = Thread.CurrentThread;
-            t.Name = "Main Thread";
-            //Console.WriteLine("Thread name - " + t.Name);
-            //Console.WriteLine("My current thread - " + Thread.CurrentThread.Name);
-            Method1();
-            Console.WriteLine("Method 1 exection Completed");
-            Method2();
-            Console.WriteLine("Method 2 Exection Completed");
-            Method3();
-            Console.WriteLine("Method 3 execution Complteed");
+            Console.WriteLine("Main Thread Started");
+
+            //Creating Threads
+            Thread t1 = new (Method1)
+            {
+                Name = "Thread1"
+            };
+
+            Thread t2 = new (Method2)
+            {
+                Name = "Thread2"
+            };
+
+            Thread t3 = new (Method3)
+            {
+                Name = "Thread3"
+            };
+            //Executing the methods
+            t1.Start();
+            t2.Start();
+            t3.Start();
+            Console.WriteLine("Main Thread Ended");
             Console.ReadLine();
         }
 
 
-        private static void Method1()
+
+        static void Method1()
         {
+
+            Console.WriteLine("Method1 Started using " + Thread.CurrentThread.Name);
+
             for (int i = 1; i <= 5; i++)
             {
                 Console.WriteLine("Method1 :" + i);
             }
+            Console.WriteLine("Method1 Ended using " + Thread.CurrentThread.Name);
         }
 
-        private static void Method2()
+        static void Method2()
         {
+            Console.WriteLine("Method2 Started using " + Thread.CurrentThread.Name);
             for (int i = 1; i <= 5; i++)
             {
                 Console.WriteLine("Method2 :" + i);
                 if (i == 2)
                 {
-                    Console.WriteLine("Execution Code Started");
+                    Console.WriteLine("Method2 DB operation Started");
+                    //Sleep for 10 seconds
                     Thread.Sleep(10000);
-                    Console.WriteLine("Executing Completed");
+                    Console.WriteLine("Method2 DB operation Completed");
                 }
-
             }
+            Console.WriteLine("Method2 Ended using " + Thread.CurrentThread.Name);
         }
 
-        private static void Method3()
+        static void Method3()
         {
+            Console.WriteLine("Method3 Started using " + Thread.CurrentThread.Name);
             for (int i = 1; i <= 5; i++)
             {
                 Console.WriteLine("Method3 :" + i);
             }
+            Console.WriteLine("Method3 Ended using " + Thread.CurrentThread.Name);
         }
     }
 
