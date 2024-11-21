@@ -6,52 +6,18 @@ namespace MultiThreadingInCSharp
     class Program
     {
 
-        static void ShowNumber(object maxNumber)
-        {
-            for (int i = 0; i < (int)maxNumber; i++)
-            {
-                Console.WriteLine(i);
-            }
-        }
-
+       
         static void Main(string[] args)
         {
 
-            //ThreadStart obj = new ThreadStart(ShowNumber);
-            //ThreadStart obj = ShowNumber;
+            int max = 10;
+            NumberHelper numberHelper = new NumberHelper(10);
+            ThreadStart obj = new ThreadStart(numberHelper.ShowNumber);
 
-            //ThreadStart obj = () => ShowNumber(6);
-
-            ParameterizedThreadStart obj = new ParameterizedThreadStart(ShowNumber);
-            Thread t = new Thread(ShowNumber);
-            t.Start(10);
-            //ShowNumber();
-
-
-            ////Creating Threads
-            //Thread t1 = new(Method1)
-            //{
-            //    Name = "Thread1"
-            //};
-
-            //Thread t2 = new(Method2)
-            //{
-            //    Name = "Thread2"
-            //};
-
-            //Thread t3 = new(Method3)
-            //{
-            //    Name = "Thread3"
-            //};
-            ////Executing the methods
-            //t1.Start();
-            //t2.Start();
-            //t3.Start();
-            //Console.WriteLine("Main Thread Ended");
+            Thread t1 = new Thread(obj);
+            t1.Start();
             Console.ReadLine();
         }
-
-
 
         //static void Method1()
         //{
@@ -93,5 +59,24 @@ namespace MultiThreadingInCSharp
         //}
     }
 
+
+    public class NumberHelper
+    {
+        private int _Number;
+
+        public NumberHelper(int num)
+        {
+            _Number = num;
+        }
+
+        public void ShowNumber()
+        {
+            for (int i = 0; i < _Number; i++)
+            {
+                Console.WriteLine(i);
+            }
+        }
+
+    }
 
 }
