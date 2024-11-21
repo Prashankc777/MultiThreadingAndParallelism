@@ -5,78 +5,43 @@ namespace MultiThreadingInCSharp
 {
     class Program
     {
-
-       
         static void Main(string[] args)
         {
+            Console.WriteLine("Main method execution started");
 
-            int max = 10;
-            NumberHelper numberHelper = new NumberHelper(10);
-            ThreadStart obj = new ThreadStart(numberHelper.ShowNumber);
-
-            Thread t1 = new Thread(obj);
+            Thread t1 = new Thread(Program.Method1);
             t1.Start();
+            Thread t2 = new Thread(Program.Method2);
+            t2.Start();
+
+            if(t1.Join(2000))
+            {
+                Console.WriteLine("Method 1 execution Completed");
+            }
+            
+            t2.Join();
+            Console.WriteLine("Method 2 execution Completed");
+
+            Console.WriteLine(t1.IsAlive
+                ? "Method 1 execution is still going on "
+                : "Method 1 execution is Completed ");
+
+            Console.WriteLine("Main method execution completed");
             Console.ReadLine();
         }
 
-        //static void Method1()
-        //{
-
-        //    Console.WriteLine("Method1 Started using " + Thread.CurrentThread.Name);
-
-        //    for (int i = 1; i <= 5; i++)
-        //    {
-        //        Console.WriteLine("Method1 :" + i);
-        //    }
-        //    Console.WriteLine("Method1 Ended using " + Thread.CurrentThread.Name);
-        //}
-
-        //static void Method2()
-        //{
-        //    Console.WriteLine("Method2 Started using " + Thread.CurrentThread.Name);
-        //    for (int i = 1; i <= 5; i++)
-        //    {
-        //        Console.WriteLine("Method2 :" + i);
-        //        if (i == 2)
-        //        {
-        //            Console.WriteLine("Method2 DB operation Started");
-        //            //Sleep for 10 seconds
-        //            Thread.Sleep(10000);
-        //            Console.WriteLine("Method2 DB operation Completed");
-        //        }
-        //    }
-        //    Console.WriteLine("Method2 Ended using " + Thread.CurrentThread.Name);
-        //}
-
-        //static void Method3()
-        //{
-        //    Console.WriteLine("Method3 Started using " + Thread.CurrentThread.Name);
-        //    for (int i = 1; i <= 5; i++)
-        //    {
-        //        Console.WriteLine("Method3 :" + i);
-        //    }
-        //    Console.WriteLine("Method3 Ended using " + Thread.CurrentThread.Name);
-        //}
-    }
-
-
-    public class NumberHelper
-    {
-        private int _Number;
-
-        public NumberHelper(int num)
+        static void Method1()
         {
-            _Number = num;
+            Console.WriteLine("Method1 execution started");
+            Thread.Sleep(5000);
+            Console.WriteLine("method 1 is awake");
         }
 
-        public void ShowNumber()
+        static void Method2()
         {
-            for (int i = 0; i < _Number; i++)
-            {
-                Console.WriteLine(i);
-            }
+            Console.WriteLine("Method2 execution started");
         }
-
     }
+
 
 }
