@@ -18,6 +18,10 @@ class Program
         _event.Release();
         Console.ReadLine();
 
+        int num = 1;
+        string abc = num.ToString();
+
+
     }
 
     public static void Written()
@@ -29,7 +33,9 @@ class Program
         Console.WriteLine(Thread.CurrentThread.ManagedThreadId + "Write Complete");
         _event.Release();
     }
+
     
+
 }
 
 
