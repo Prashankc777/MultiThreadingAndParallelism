@@ -1,71 +1,43 @@
 ﻿using System.Diagnostics;
+using System.Threading;
 
 namespace MultiThreadingInCSharp;
 class Program
 {
-    public static int sum = 0;
+    static ManualResetEvent _mre = new ManualResetEvent(false);
 
     static void Main(string[] args)
     {
-        Stopwatch _watch = Stopwatch.StartNew();
-        Thread t1 = new Thread(Addition);
-        Thread t2 = new Thread(Addition);
-        Thread t3 = new Thread(Addition);
+
+
+        Thread t1 = new Thread(Written);
 
         t1.Start();
-        t2.Start();
-        t3.Start();
-
-        t1.Join();
-        t2.Join();
-        t3.Join();
-
-        Console.WriteLine("Total Sum is " + sum);
-        _watch.Stop();
-        Console.WriteLine("Time taken is " + _watch.ElapsedTicks);
-        Console.ReadLine();
-    }
-
-
-    public static object _lock = new object();
-
-    public static void Addition()
-    {
-        for (int i = 0; i < 50000; i++)
+        for (int i = 0; i < 5; i++)
         {
-            bool lockTaken = false;
-            Monitor.Enter(_lock, ref lockTaken);
-            try
-            {
-                sum++;
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                if (lockTaken)
-                {
-                    Monitor.Exit(_lock);
-                }
-
-            }
-
-
-
-
-            // sum++;
-            // Interlocked.Increment(ref sum); // for perfomance this is better 
-
-            //lock (_lock)
-            //{
-            //    sum++;
-            //}
-
+            new Thread(Read).Start();
         }
+
     }
 
+
+    public static void Written()
+    {
+        Console.WriteLine("Write Working ");
+        _mre.Reset();
+        Thread.Sleep(5000);
+        Console.WriteLine("Write Completed ");
+        _mre.Set();
+
+    }
+
+    public static void Read()
+    {
+        Console.WriteLine("Read Working Wait ");
+        _mre.WaitOne();
+        Console.WriteLine("Read Completed ");
+        
+    }
 
 }
 
